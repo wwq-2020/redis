@@ -2,7 +2,6 @@ package redis
 
 import (
 	"context"
-	"io"
 	"net"
 )
 
@@ -11,8 +10,8 @@ type Dialer func() (net.Conn, error)
 
 // Pool 连接池
 type Pool interface {
-	Get(ctx context.Context) (io.ReadWriter, error)
-	Put(io.ReadWriter)
+	Get(ctx context.Context) (net.Conn, error)
+	Put(net.Conn)
 }
 
 // PoolOptions 连接池参数
@@ -29,9 +28,9 @@ func NewPool(options *PoolOptions) Pool {
 	return &pool{}
 }
 
-func (p *pool) Get(ctx context.Context) (io.ReadWriter, error) {
+func (p *pool) Get(ctx context.Context) (net.Conn, error) {
 	return nil, nil
 }
 
-func (p *pool) Put(io.ReadWriter) {
+func (p *pool) Put(net.Conn) {
 }

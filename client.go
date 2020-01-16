@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"io"
+	"net"
 	"time"
 )
 
@@ -112,7 +112,7 @@ func (c *client) roudtrip(ctx context.Context, cmd string, args ...interface{}) 
 	return result, nil
 }
 
-func (c *client) roudtripWithConn(ctx context.Context, conn io.ReadWriter, cmd string, args ...interface{}) ([]byte, error) {
+func (c *client) roudtripWithConn(ctx context.Context, conn net.Conn, cmd string, args ...interface{}) ([]byte, error) {
 	bytesArgs := make([][]byte, 0, len(args))
 	for _, arg := range args {
 		bytesArg, err := c.options.Serializer.Marshal(arg)
@@ -131,7 +131,7 @@ func (c *client) roudtripWithConn(ctx context.Context, conn io.ReadWriter, cmd s
 	return result, nil
 }
 
-func (c *client) authIfNeeded(ctx context.Context, conn io.ReadWriter) error {
+func (c *client) authIfNeeded(ctx context.Context, conn net.Conn) error {
 	if c.options.Password == "" {
 		return nil
 	}
@@ -141,7 +141,7 @@ func (c *client) authIfNeeded(ctx context.Context, conn io.ReadWriter) error {
 	return nil
 }
 
-func (c *client) auth(ctx context.Context, conn io.ReadWriter) error {
+func (c *client) auth(ctx context.Context, conn net.Conn) error {
 	cmd := "auth"
 	args := []interface{}{c.options.Password}
 	result, err := c.roudtripWithConn(ctx, conn, cmd, args...)
