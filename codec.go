@@ -2,15 +2,14 @@ package redis
 
 import (
 	"context"
-	"io"
 	"net"
 )
 
 // Codec 编解码器
 type Codec interface {
 	Encode(cmd string, args [][]byte) string
-	EncodeTo(ctx context.Context, rw net.Conn, cmd string, args [][]byte) error
-	Decode(ctx context.Context, r io.Reader) ([]byte, error)
+	EncodeTo(ctx context.Context, conn net.Conn, cmd string, args [][]byte) error
+	Decode(ctx context.Context, conn net.Conn) ([]byte, error)
 }
 
 type codec struct{}
@@ -23,6 +22,6 @@ func (c *codec) EncodeTo(ctx context.Context, rw net.Conn, cmd string, args [][]
 	return nil
 }
 
-func (c *codec) Decode(ctx context.Context, r io.Reader) ([]byte, error) {
+func (c *codec) Decode(ctx context.Context, conn net.Conn) ([]byte, error) {
 	return nil, nil
 }
