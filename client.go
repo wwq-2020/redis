@@ -30,8 +30,8 @@ func (o *ClientOptions) fill() *ClientOptions {
 	if o == nil {
 		return &ClientOptions{
 			Pool:       NewPool(nil),
-			Codec:      &codec{},
-			Serializer: &serializer{},
+			Codec:      NewDefaultCodec(),
+			Serializer: NewDefaultSerializer(),
 		}
 	}
 	return o

@@ -12,6 +12,11 @@ type Codec interface {
 	Decode(ctx context.Context, conn net.Conn) ([]byte, error)
 }
 
+// NewDefaultCodec NewDefaultCodec
+func NewDefaultCodec() Codec {
+	return &codec{}
+}
+
 type codec struct{}
 
 func (c *codec) Encode(cmd string, args [][]byte) string {

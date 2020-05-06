@@ -8,6 +8,11 @@ type Serializer interface {
 	Unmarshal([]byte, interface{}) error
 }
 
+// NewDefaultSerializer NewDefaultSerializer
+func NewDefaultSerializer() Serializer {
+	return &serializer{}
+}
+
 type serializer struct {
 }
 

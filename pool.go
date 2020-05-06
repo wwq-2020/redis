@@ -2,8 +2,9 @@ package redis
 
 import (
 	"context"
-	"github.com/wwq1988/datastructure/lockfree/queue"
 	"net"
+
+	"github.com/wwq1988/datastructure/lockfree/queue"
 )
 
 // Dialer 链接简历方法
@@ -20,6 +21,13 @@ type PoolOptions struct {
 	Addr string
 }
 
+func (o *PoolOptions) fill() *PoolOptions {
+	if o == nil {
+		return &PoolOptions{Addr: "127.0.0.1:6379"}
+	}
+	return o
+}
+
 type pool struct {
 	options *PoolOptions
 	queue   *queue.Queue
@@ -28,13 +36,14 @@ type pool struct {
 // NewPool 初始化连接池
 func NewPool(options *PoolOptions) Pool {
 	return &pool{
-		queue: queue.New(),
+		queue:   queue.New(),
+		options: options.fill(),
 	}
 }
 
 func (p *pool) Get(ctx context.Context) (net.Conn, error) {
 	item, err := p.queue.Pop()
-	if err != nil {
+	if err != nil && err != queue.ErrQueueEmpty {
 		return nil, err
 	}
 	if item != nil {
